@@ -101,8 +101,10 @@ namespace AssetWebManager
             app.UseWebSockets(webSocketOptions);
             app.Use(async (context, next) =>
             {
+                Console.WriteLine("Entry");
                 if (context.Request.Path == "/ws")
                 {
+                    Console.WriteLine("WebSocket Entry");
                     if (context.WebSockets.IsWebSocketRequest)
                     {
                         Console.WriteLine("WebSocket Connected");
@@ -111,11 +113,13 @@ namespace AssetWebManager
                     }
                     else
                     {
+                        Console.WriteLine("400");
                         context.Response.StatusCode = 400;
                     }
                 }
                 else
                 {
+                    Console.WriteLine("Not WebSocket");
                     await next();
                 }
             });
