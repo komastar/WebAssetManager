@@ -105,6 +105,7 @@ namespace AssetWebManager
                 {
                     if (context.WebSockets.IsWebSocketRequest)
                     {
+                        Console.WriteLine("WebSocket Connected");
                         using WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
                         await Echo(context, webSocket);
                     }
