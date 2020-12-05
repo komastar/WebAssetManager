@@ -113,7 +113,7 @@ namespace AssetWebManager
                     }
                     else
                     {
-                        Console.WriteLine("400");
+                        Console.WriteLine($"NOT WebSocket {context.Connection.RemotePort}");
                         context.Response.StatusCode = 400;
                     }
                 }
