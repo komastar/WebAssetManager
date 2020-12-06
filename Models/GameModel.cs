@@ -18,6 +18,10 @@ namespace AssetWebManager.Models
         public bool IsOpen { get; set; }
         public DateTime CreationTime { get; set; }
 
+        public GameModel()
+        {
+        }
+
         public GameModel(string gamecode, int maxUserCount, bool isOpen = false)
         {
             GameCode = gamecode;

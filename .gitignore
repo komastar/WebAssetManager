@@ -348,8 +348,5 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-/AssetWebManager/AssetWebManager/wwwroot/defensquare
-/AssetWebManager/AssetWebManager/appsettings.Development.json
-/AssetWebManager/AssetWebManager/appsettings.json
-/AssetWebManager/AssetWebManager/appsettings.Development.json
-/AssetWebManager/AssetWebManager/appsettings.json
+/appsettings.json
+/appsettings.Development.json
