@@ -24,11 +24,19 @@ namespace AssetWebManager.Models
 
         public GameModel(string gamecode, int maxUserCount, bool isOpen = false)
         {
+            maxUserCount = maxUserCount > 6 ? 6 : maxUserCount;
             GameCode = gamecode;
             UserCount = 0;
-            MaxUserCount = maxUserCount;
+            MaxUserCount = maxUserCount < 2 ? 2 : maxUserCount;
             IsOpen = isOpen;
             CreationTime = DateTime.Now;
+        }
+
+        public void Validate()
+        {
+            MaxUserCount = Math.Clamp(MaxUserCount, 2, 6);
+            CreationTime = DateTime.Now;
+            UserCount = 0;
         }
     }
 }

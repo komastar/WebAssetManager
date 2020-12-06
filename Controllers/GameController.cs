@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AssetWebManager.Data;
 using AssetWebManager.Models;
+using System;
 
-namespace AssetWebManager
+namespace AssetWebManager.Controllers
 {
     public class GameController : Controller
     {
@@ -55,6 +56,13 @@ namespace AssetWebManager
         {
             if (ModelState.IsValid)
             {
+                if (string.IsNullOrEmpty(gameModel.GameCode))
+                {
+                    gameModel.GameCode = MakeGameCode();
+                }
+
+                gameModel.Validate();
+
                 _context.Add(gameModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -155,6 +163,39 @@ namespace AssetWebManager
         private bool GameModelExists(string id)
         {
             return _context.GameModel.Any(e => e.GameCode == id);
+        }
+
+        private string MakeGameCode()
+        {
+            GameModel game;
+            string newGameCode;
+            do
+            {
+                var guid = Guid.NewGuid();
+                newGameCode = guid.ToString().Substring(0, 4).ToLower();
+                game = FindGame(newGameCode);
+            } while (null != game);
+
+            return newGameCode;
+        }
+
+        private GameModel FindGame(string gamecode)
+        {
+            return _context.Find<GameModel>(gamecode);
+        }
+
+        private void AddOrUpdate(GameModel newGame)
+        {
+            var find = _context.Find<GameModel>(newGame.GameCode);
+            if (null == find)
+            {
+                _context.Add(newGame);
+            }
+            else
+            {
+                _context.Update(newGame);
+            }
+            _context.SaveChanges();
         }
     }
 }

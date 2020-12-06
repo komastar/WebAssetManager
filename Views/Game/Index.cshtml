@@ -6,20 +6,26 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="row">
+    <form asp-action="Create">
+        <div class="form-group row">
+            <div class="col-md-4">
+                <input id="MaxUserCount" type="number" name="MaxUserCount" class="form-control" />
+            </div>
+            <div class="col-md-4">
+                <input type="submit" value="Create" class="btn btn-outline-primary" />
+            </div>
+        </div>
+    </form>
+    <form asp-action="Clear">
+        <div class="col-md-1">
+            <input type="submit" value="Clear" class="btn btn-outline-info" />
+        </div>
+    </form>
+</div>
+
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                <form asp-action="Clear">
-                    <div class="form-group">
-                        <input type="submit" value="Clear" class="btn btn-primary" />
-                    </div>
-                </form>
-            </th>
-        </tr>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.GameCode)
@@ -40,29 +46,30 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.GameCode)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserCount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaxUserCount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsOpen)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreationTime)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.GameCode">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.GameCode">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.GameCode">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GameCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaxUserCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsOpen)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreationTime)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.GameCode">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.GameCode">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.GameCode">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
