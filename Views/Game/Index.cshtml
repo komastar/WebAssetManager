@@ -1,0 +1,68 @@
+﻿@model IEnumerable<AssetWebManager.Models.GameModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <form asp-action="Clear">
+                    <div class="form-group">
+                        <input type="submit" value="Clear" class="btn btn-primary" />
+                    </div>
+                </form>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.GameCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaxUserCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsOpen)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreationTime)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaxUserCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsOpen)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreationTime)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.GameCode">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.GameCode">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.GameCode">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

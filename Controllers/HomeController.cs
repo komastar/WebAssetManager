@@ -9,16 +9,19 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authorization;
+using AssetWebManager.Data;
 
 namespace AssetWebManager.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ApplicationDbContext _context;
         private readonly ILogger<HomeController> _logger;
         private IWebHostEnvironment _env;
 
-        public HomeController(IWebHostEnvironment env, ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext context, IWebHostEnvironment env, ILogger<HomeController> logger)
         {
+            _context = context;
             _logger = logger;
             _env = env;
         }

@@ -13,13 +13,13 @@ namespace AssetWebManager.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class GameController : ControllerBase
+    public class ApiGameController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<ApiAssetBundleController> _logger;
         private IWebHostEnvironment _env;
 
-        public GameController(ApplicationDbContext context, ILogger<ApiAssetBundleController> logger, IWebHostEnvironment env)
+        public ApiGameController(ApplicationDbContext context, ILogger<ApiAssetBundleController> logger, IWebHostEnvironment env)
         {
             _context = context;
             _logger = logger;
@@ -27,14 +27,14 @@ namespace AssetWebManager.Controllers
         }
 
         #region RESTAPI
-        // GET: api/Game/GetAll
+        // GET: api/ApiGame/GetAll
         [HttpGet]
         public IEnumerable<GameModel> GetAll()
         {
             return _context.GameModel.ToList();
         }
 
-        //  POST api/Game/Create/4
+        //  POST api/ApiGame/Create/4
         [HttpPost("{maxUserCount}")]
         public GameModel Create(int maxUserCount)
         {
@@ -46,7 +46,7 @@ namespace AssetWebManager.Controllers
             return newGame;
         }
 
-        //  PUT api/Game/Join/c0de
+        //  PUT api/ApiGame/Join/c0de
         [HttpPut("{gamecode}")]
         public bool Join(string gamecode)
         {
@@ -65,7 +65,7 @@ namespace AssetWebManager.Controllers
             return false;
         }
 
-        // DELETE api/Game/c0de
+        // DELETE api/ApiGame/c0de
         [HttpDelete("{gamecode}")]
         public void Delete(string gamecode)
         {
