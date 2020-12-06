@@ -14,6 +14,7 @@ namespace AssetWebManager.Data
             : base(options)
         {
         }
-        public DbSet<AssetWebManager.Models.AssetBundleModel> AssetBundleModel { get; set; }
+        public DbSet<AssetBundleModel> AssetBundleModel { get; set; }
+        public DbSet<GameModel> GameModel { get; set; }
     }
 }
