@@ -11,6 +11,9 @@ using Microsoft.Extensions.Hosting;
 using System.Net.WebSockets;
 using Microsoft.AspNetCore.Http;
 using System.Threading;
+using AssetWebManager.Models;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace AssetWebManager
 {
@@ -123,6 +126,9 @@ namespace AssetWebManager
         {
             var buffer = new byte[256];
             WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+            CommModel data = new CommModel();
+            data.FromBytes(buffer);
+            data.Print();
             while (!result.CloseStatus.HasValue)
             {
                 await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
