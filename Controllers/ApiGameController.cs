@@ -34,8 +34,8 @@ namespace AssetWebManager.Controllers
             return _context.GameModel.ToList();
         }
 
-        //  POST api/ApiGame/Create/4
-        [HttpPost("{maxUserCount}")]
+        //  GET: api/ApiGame/Create/4
+        [HttpGet("{maxUserCount}")]
         public GameModel Create(int maxUserCount)
         {
             var gameCode = MakeGameCode();
@@ -46,8 +46,8 @@ namespace AssetWebManager.Controllers
             return newGame;
         }
 
-        //  PUT api/ApiGame/Join/c0de
-        [HttpPut("{gamecode}")]
+        //  GET: api/ApiGame/Join/c0de
+        [HttpGet("{gamecode}")]
         public bool Join(string gamecode)
         {
             var game = FindGame(gamecode);
@@ -65,11 +65,11 @@ namespace AssetWebManager.Controllers
             return false;
         }
 
-        // DELETE api/ApiGame/c0de
-        [HttpDelete("{gamecode}")]
-        public void Delete(string gamecode)
+        // GET: api/ApiGame/Exit/c0de
+        [HttpGet("{gamecode}")]
+        public bool Exit(string gamecode)
         {
-            Remove(gamecode);
+            return Remove(gamecode);
         }
         #endregion
 
@@ -106,14 +106,20 @@ namespace AssetWebManager.Controllers
             _context.SaveChanges();
         }
 
-        private void Remove(string gamecode)
+        private bool Remove(string gamecode)
         {
             var game = FindGame(gamecode);
             if (null != game)
             {
                 _context.Remove(game);
+                _context.SaveChanges();
+
+                return true;
             }
-            _context.SaveChanges();
+            else
+            {
+                return false;
+            }
         }
     }
 }
