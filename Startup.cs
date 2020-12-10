@@ -14,6 +14,7 @@ using System.Threading;
 using AssetWebManager.Models;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using System.Text.Json;
 
 namespace AssetWebManager
 {
@@ -39,6 +40,10 @@ namespace AssetWebManager
             services.AddControllersWithViews();
             services.AddRazorPages()
                 .AddRazorRuntimeCompilation();
+            services.AddControllers().AddJsonOptions(option =>
+            {
+                option.JsonSerializerOptions.PropertyNamingPolicy = null;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
