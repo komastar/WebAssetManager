@@ -36,19 +36,19 @@ namespace AssetWebManager.Controllers
 
         //  GET: api/ApiGame/Create/4
         [HttpGet("{maxUserCount}")]
-        public GameModel Create(int maxUserCount)
+        public ResponseModel Create(int maxUserCount)
         {
             var gameCode = MakeGameCode();
             GameModel newGame = new GameModel(gameCode, maxUserCount);
 
             AddOrUpdate(newGame);
 
-            return newGame;
+            return new ResponseModel(newGame);
         }
 
         //  GET: api/ApiGame/Join/c0de
         [HttpGet("{gamecode}")]
-        public bool Join(string gamecode)
+        public ResponseModel Join(string gamecode)
         {
             var game = FindGame(gamecode);
             if (null != game)
@@ -58,18 +58,18 @@ namespace AssetWebManager.Controllers
                     game.UserCount++;
                     AddOrUpdate(game);
 
-                    return true;
+                    return new ResponseModel(true);
                 }
             }
 
-            return false;
+            return new ResponseModel(false);
         }
 
         // GET: api/ApiGame/Exit/c0de
         [HttpGet("{gamecode}")]
-        public bool Exit(string gamecode)
+        public ResponseModel Exit(string gamecode)
         {
-            return Remove(gamecode);
+            return new ResponseModel(Remove(gamecode));
         }
         #endregion
 

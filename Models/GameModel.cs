@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AssetWebManager.Models
 {
@@ -18,9 +15,7 @@ namespace AssetWebManager.Models
         public bool IsOpen { get; set; }
         public DateTime CreationTime { get; set; }
 
-        public GameModel()
-        {
-        }
+        public GameModel() { }
 
         public GameModel(string gamecode, int maxUserCount, bool isOpen = false)
         {
