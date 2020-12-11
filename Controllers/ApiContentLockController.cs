@@ -1,4 +1,5 @@
-﻿using AssetWebManager.Models;
+﻿using AssetWebManager.Data;
+using AssetWebManager.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -8,16 +9,38 @@ using System.Threading.Tasks;
 
 namespace AssetWebManager.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class ApiContentLockController : ControllerBase
     {
-        [HttpGet("{version}/{content}")]
-        public ResponseModel CheckContent(string version, string content)
+        private readonly ApplicationDbContext _context;
+
+        public ApiContentLockController(ApplicationDbContext context)
         {
-            ResponseModel response = new ResponseModel();
+            _context = context;
+        }
+
+        #region RESTAPI
+        // GET: api/ApiContentLock/Check/{PROJECT}/{VERSION}/{CONTENT_NAME}
+        [HttpGet("{project}/{version}/{content}")]
+        public ResponseModel Check(string project, string version, string content)
+        {
+            ResponseModel response = new ResponseModel(false);
+            var contentLock = FindContentLock(project, content);
+            if (null != contentLock)
+            {
+                VersionModel versionFromData = new VersionModel(contentLock.Version);
+                VersionModel versionFromClient = new VersionModel(version);
+                response.ProcessResult = versionFromClient >= versionFromData;
+            }
 
             return response;
+        }
+        #endregion
+
+        private ContentLockModel FindContentLock(string project, string content)
+        {
+            return _context.ContentLock.SingleOrDefault(c => c.Name == content && c.Project == project);
         }
     }
 }
