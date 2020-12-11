@@ -24,5 +24,6 @@ namespace AssetWebManager.Models
         }
         public ResponseModel(bool procResult) : this(procResult, null) { }
         public ResponseModel(object data) : this(true, data) { }
+        public ResponseModel() { }
     }
 }
