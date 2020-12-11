@@ -13,7 +13,14 @@ namespace AssetWebManager.Models
         public ResponseModel(bool procResult, object data)
         {
             ProcessResult = procResult;
-            Data = JObject.FromObject(data).ToString();
+            if (null != data)
+            {
+                Data = JObject.FromObject(data).ToString();
+            }
+            else
+            {
+                Data = null;
+            }
         }
         public ResponseModel(bool procResult) : this(procResult, null) { }
         public ResponseModel(object data) : this(true, data) { }
