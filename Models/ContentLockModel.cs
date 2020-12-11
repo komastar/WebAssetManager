@@ -12,5 +12,6 @@ namespace AssetWebManager.Models
         public string Project { get; set; }
         public string Version { get; set; }
         public string Region { get; set; }
+        public bool Lock { get; set; } = false;
     }
 }

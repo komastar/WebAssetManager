@@ -54,7 +54,7 @@ namespace AssetWebManager.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Project,Name,Version,Region")] ContentLockModel contentLockModel)
+        public async Task<IActionResult> Create(ContentLockModel contentLockModel)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace AssetWebManager.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Project,Name,Version,Region")] ContentLockModel contentLockModel)
+        public async Task<IActionResult> Edit(int id, ContentLockModel contentLockModel)
         {
             if (id != contentLockModel.Id)
             {

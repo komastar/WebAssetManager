@@ -31,7 +31,7 @@ namespace AssetWebManager.Controllers
             {
                 VersionModel versionFromData = new VersionModel(contentLock.Version);
                 VersionModel versionFromClient = new VersionModel(version);
-                response.ProcessResult = versionFromClient >= versionFromData;
+                response.ProcessResult = (versionFromClient >= versionFromData) && contentLock.Lock;
             }
 
             return response;
