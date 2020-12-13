@@ -5,9 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using AssetWebManager.Data;
 using AssetWebManager.Models;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AssetWebManager.Controllers
 {
+    [Authorize("Manager")]
     public class GameController : Controller
     {
         private readonly ApplicationDbContext _context;
