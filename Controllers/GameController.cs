@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AssetWebManager.Controllers
 {
-    [Authorize("Manager")]
+    [Authorize(Roles = "Manager")]
     public class GameController : Controller
     {
         private readonly ApplicationDbContext _context;
