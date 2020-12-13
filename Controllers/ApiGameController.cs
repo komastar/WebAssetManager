@@ -77,6 +77,11 @@ namespace AssetWebManager.Controllers
         public ResponseModel Exit(string gamecode)
         {
             var game = FindGame(gamecode);
+            if (null == game)
+            {
+                return new ResponseModel(false);
+            }
+
             game.UserCount--;
             if (0 < game.UserCount)
             {
