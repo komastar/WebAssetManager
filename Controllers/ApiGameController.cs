@@ -27,6 +27,13 @@ namespace AssetWebManager.Controllers
         }
 
         #region RESTAPI
+        //  GET: api/ApiGame/Get
+        [HttpGet("{gamecode}")]
+        public GameModel Get(string gamecode)
+        {
+            return FindGame(gamecode);
+        }
+
         // GET: api/ApiGame/GetAll
         [HttpGet]
         public IEnumerable<GameModel> GetAll()
