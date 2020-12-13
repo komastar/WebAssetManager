@@ -38,7 +38,7 @@ namespace AssetWebManager.Controllers
         [HttpGet]
         public IEnumerable<GameModel> GetAll()
         {
-            return _context.GameModel.ToList();
+            return _context.GameRoom.ToList();
         }
 
         //  GET: api/ApiGame/Create/4

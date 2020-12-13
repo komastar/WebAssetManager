@@ -20,7 +20,7 @@ namespace AssetWebManager.Controllers
         // GET: Game
         public async Task<IActionResult> Index()
         {
-            return View(await _context.GameModel.ToListAsync());
+            return View(await _context.GameRoom.ToListAsync());
         }
 
         // GET: Game/Details/5
@@ -31,7 +31,7 @@ namespace AssetWebManager.Controllers
                 return NotFound();
             }
 
-            var gameModel = await _context.GameModel
+            var gameModel = await _context.GameRoom
                 .FirstOrDefaultAsync(m => m.GameCode == id);
             if (gameModel == null)
             {
@@ -78,7 +78,7 @@ namespace AssetWebManager.Controllers
                 return NotFound();
             }
 
-            var gameModel = await _context.GameModel.FindAsync(id);
+            var gameModel = await _context.GameRoom.FindAsync(id);
             if (gameModel == null)
             {
                 return NotFound();
@@ -129,7 +129,7 @@ namespace AssetWebManager.Controllers
                 return NotFound();
             }
 
-            var gameModel = await _context.GameModel
+            var gameModel = await _context.GameRoom
                 .FirstOrDefaultAsync(m => m.GameCode == id);
             if (gameModel == null)
             {
@@ -144,8 +144,8 @@ namespace AssetWebManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var gameModel = await _context.GameModel.FindAsync(id);
-            _context.GameModel.Remove(gameModel);
+            var gameModel = await _context.GameRoom.FindAsync(id);
+            _context.GameRoom.Remove(gameModel);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -153,7 +153,7 @@ namespace AssetWebManager.Controllers
         [HttpPost]
         public async Task<IActionResult> Clear()
         {
-            var games = _context.GameModel.ToList();
+            var games = _context.GameRoom.ToList();
             _context.RemoveRange(games);
             await _context.SaveChangesAsync();
 
@@ -162,7 +162,7 @@ namespace AssetWebManager.Controllers
 
         private bool GameModelExists(string id)
         {
-            return _context.GameModel.Any(e => e.GameCode == id);
+            return _context.GameRoom.Any(e => e.GameCode == id);
         }
 
         private string MakeGameCode()

@@ -18,6 +18,8 @@
     <Compile Remove="Migrations\20201206074427_GameModel.Designer.cs" />
     <Compile Remove="Migrations\20201206074507_GameModel.cs" />
     <Compile Remove="Migrations\20201206074507_GameModel.Designer.cs" />
+    <Compile Remove="Migrations\20201213163509_GameModel-Add-UserId.cs" />
+    <Compile Remove="Migrations\20201213163509_GameModel-Add-UserId.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
