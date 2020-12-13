@@ -58,7 +58,7 @@ namespace AssetWebManager.Controllers
                     game.UserCount++;
                     AddOrUpdate(game);
 
-                    return new ResponseModel(true);
+                    return new ResponseModel(true, game);
                 }
             }
 
@@ -70,6 +70,17 @@ namespace AssetWebManager.Controllers
         public ResponseModel Exit(string gamecode)
         {
             return new ResponseModel(Remove(gamecode));
+        }
+
+        //  GET: api/ApiGame/Round/c0de
+        [HttpGet("{gamecode}/{time}")]
+        public async Task<ResponseModel> Round(string gamecode, int time)
+        {
+            ResponseModel response = new ResponseModel(true);
+
+            await Task.Delay(time);
+
+            return response;
         }
         #endregion
 
