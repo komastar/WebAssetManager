@@ -76,7 +76,18 @@ namespace AssetWebManager.Controllers
         [HttpGet("{gamecode}")]
         public ResponseModel Exit(string gamecode)
         {
-            return new ResponseModel(Remove(gamecode));
+            var game = FindGame(gamecode);
+            game.UserCount--;
+            if (0 < game.UserCount)
+            {
+                AddOrUpdate(game);
+
+                return new ResponseModel(game);
+            }
+            else
+            {
+                return new ResponseModel(Remove(gamecode));
+            }
         }
 
         //  GET: api/ApiGame/Round/c0de
