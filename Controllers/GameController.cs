@@ -54,7 +54,7 @@ namespace AssetWebManager.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,GameCode,UserCount,MaxUserCount,IsOpen,CreationTime")] GameModel gameModel)
+        public async Task<IActionResult> Create([Bind("Id,GameCode,UserCount,MaxUserCount,IsOpen,CreationTime")] GameRoomModel gameModel)
         {
             if (ModelState.IsValid)
             {
@@ -93,7 +93,7 @@ namespace AssetWebManager.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,GameCode,UserCount,MaxUserCount,IsOpen,CreationTime")] GameModel gameModel)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,GameCode,UserCount,MaxUserCount,IsOpen,CreationTime")] GameRoomModel gameModel)
         {
             if (id != gameModel.GameCode)
             {
@@ -169,7 +169,7 @@ namespace AssetWebManager.Controllers
 
         private string MakeGameCode()
         {
-            GameModel game;
+            GameRoomModel game;
             string newGameCode;
             do
             {
@@ -181,14 +181,14 @@ namespace AssetWebManager.Controllers
             return newGameCode;
         }
 
-        private GameModel FindGame(string gamecode)
+        private GameRoomModel FindGame(string gamecode)
         {
-            return _context.Find<GameModel>(gamecode);
+            return _context.Find<GameRoomModel>(gamecode);
         }
 
-        private void AddOrUpdate(GameModel newGame)
+        private void AddOrUpdate(GameRoomModel newGame)
         {
-            var find = _context.Find<GameModel>(newGame.GameCode);
+            var find = _context.Find<GameRoomModel>(newGame.GameCode);
             if (null == find)
             {
                 _context.Add(newGame);

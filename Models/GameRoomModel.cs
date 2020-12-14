@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AssetWebManager.Models
 {
-    public class GameModel
+    public class GameRoomModel
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -18,9 +18,9 @@ namespace AssetWebManager.Models
         [NotMapped]
         public string UserId { get; set; }
 
-        public GameModel() { }
+        public GameRoomModel() { }
 
-        public GameModel(string gamecode, int maxUserCount, bool isOpen = false)
+        public GameRoomModel(string gamecode, int maxUserCount, bool isOpen = false)
         {
             maxUserCount = maxUserCount > 6 ? 6 : maxUserCount;
             GameCode = gamecode;

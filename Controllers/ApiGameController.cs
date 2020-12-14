@@ -36,7 +36,7 @@ namespace AssetWebManager.Controllers
 
         // GET: api/ApiGame/GetAll
         [HttpGet]
-        public IEnumerable<GameModel> GetAll()
+        public IEnumerable<GameRoomModel> GetAll()
         {
             return _context.GameRoom.ToList();
         }
@@ -46,7 +46,7 @@ namespace AssetWebManager.Controllers
         public ResponseModel Create(int maxUserCount)
         {
             var gameCode = MakeGameCode();
-            GameModel newGame = new GameModel(gameCode, maxUserCount);
+            GameRoomModel newGame = new GameRoomModel(gameCode, maxUserCount);
 
             AddOrUpdate(newGame);
 
@@ -109,7 +109,7 @@ namespace AssetWebManager.Controllers
 
         private string MakeGameCode()
         {
-            GameModel game;
+            GameRoomModel game;
             string newGameCode;
             do
             {
@@ -121,14 +121,14 @@ namespace AssetWebManager.Controllers
             return newGameCode;
         }
 
-        private GameModel FindGame(string gamecode)
+        private GameRoomModel FindGame(string gamecode)
         {
-            return _context.Find<GameModel>(gamecode);
+            return _context.Find<GameRoomModel>(gamecode);
         }
 
-        private void AddOrUpdate(GameModel newGame)
+        private void AddOrUpdate(GameRoomModel newGame)
         {
-            var find = _context.Find<GameModel>(newGame.GameCode);
+            var find = _context.Find<GameRoomModel>(newGame.GameCode);
             if (null == find)
             {
                 _context.Add(newGame);
