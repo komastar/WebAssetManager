@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using AssetWebManager.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using AssetWebManager.Models;
-using Microsoft.AspNetCore.Identity;
 
 namespace AssetWebManager.Data
 {

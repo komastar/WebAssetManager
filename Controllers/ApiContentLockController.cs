@@ -1,11 +1,7 @@
 ﻿using AssetWebManager.Data;
 using AssetWebManager.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace AssetWebManager.Controllers
 {

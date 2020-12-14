@@ -1,12 +1,11 @@
-﻿using System;
+﻿using AssetWebManager.Data;
+using AssetWebManager.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using AssetWebManager.Data;
-using AssetWebManager.Models;
 
 namespace AssetWebManager.Controllers
 {

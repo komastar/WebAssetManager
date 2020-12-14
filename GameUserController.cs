@@ -1,30 +1,28 @@
 ﻿using AssetWebManager.Data;
 using AssetWebManager.Models;
 using AssetWebManager.Repository;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
-namespace AssetWebManager.Controllers
+namespace AssetWebManager
 {
-    [Authorize(Roles = "Manager")]
-    public class GameController : Controller
+    public class GameUserController : Controller
     {
         private readonly GameRepository gameRepo;
 
-        public GameController(ApplicationDbContext context)
+        public GameUserController(ApplicationDbContext context)
         {
             gameRepo = new GameRepository(context);
         }
 
-        // GET: Game
+        // GET: GameUser
         public async Task<IActionResult> Index()
         {
-            return View(await gameRepo.GetAllGameRoomAsync());
+            return View(await gameRepo.GetAllGameUserAsync());
         }
 
-        // GET: Game/Details/5
+        // GET: GameUser/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -32,39 +30,37 @@ namespace AssetWebManager.Controllers
                 return NotFound();
             }
 
-            var gameModel = await gameRepo.FindGameRoomAsync(id);
-            if (gameModel == null)
+            var gameUserModel = await gameRepo.FindGameUserAsync(id);
+            if (gameUserModel == null)
             {
                 return NotFound();
             }
 
-            return View(gameModel);
+            return View(gameUserModel);
         }
 
-        // GET: Game/Create
+        // GET: GameUser/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Game/Create
+        // POST: GameUser/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,GameCode,UserCount,MaxUserCount,IsOpen,CreationTime")] GameRoomModel gameRoom)
+        public async Task<IActionResult> Create([Bind("Id,UserId,GameRoomId")] GameUserModel gameUserModel)
         {
             if (ModelState.IsValid)
             {
-                gameRoom.Validate();
-                await gameRepo.CreateGameRoomAsync(gameRoom.MaxUserCount);
-
+                await gameRepo.CreateGameUserAsync(gameUserModel);
                 return RedirectToAction(nameof(Index));
             }
-            return View(gameRoom);
+            return View(gameUserModel);
         }
 
-        // GET: Game/Edit/5
+        // GET: GameUser/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -72,22 +68,22 @@ namespace AssetWebManager.Controllers
                 return NotFound();
             }
 
-            var gameModel = await gameRepo.FindGameRoomAsync(id);
-            if (gameModel == null)
+            var gameUserModel = await gameRepo.FindGameUserAsync(id);
+            if (gameUserModel == null)
             {
                 return NotFound();
             }
-            return View(gameModel);
+            return View(gameUserModel);
         }
 
-        // POST: Game/Edit/5
+        // POST: GameUser/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,GameCode,UserCount,MaxUserCount,IsOpen,CreationTime")] GameRoomModel gameRoom)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,UserId,GameRoomId")] GameUserModel gameUserModel)
         {
-            if (id != gameRoom.GameCode)
+            if (id != gameUserModel.UserId)
             {
                 return NotFound();
             }
@@ -96,11 +92,11 @@ namespace AssetWebManager.Controllers
             {
                 try
                 {
-                    await gameRepo.UpdateGameRoomAsync(gameRoom);
+                    await gameRepo.UpdateGameUserAsync(gameUserModel);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (null == gameRepo.FindGameRoom(gameRoom.GameCode))
+                    if (null == gameRepo.FindGameUser(gameUserModel.UserId))
                     {
                         return NotFound();
                     }
@@ -111,10 +107,10 @@ namespace AssetWebManager.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(gameRoom);
+            return View(gameUserModel);
         }
 
-        // GET: Game/Delete/5
+        // GET: GameUser/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
@@ -122,32 +118,31 @@ namespace AssetWebManager.Controllers
                 return NotFound();
             }
 
-            var gameModel = await gameRepo.FindGameRoomAsync(id);
-            if (gameModel == null)
+            var gameUserModel = await gameRepo.FindGameUserAsync(id);
+            if (gameUserModel == null)
             {
                 return NotFound();
             }
 
-            return View(gameModel);
+            return View(gameUserModel);
         }
 
-        // POST: Game/Delete/5
+        // POST: GameUser/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var gameModel = await gameRepo.FindGameRoomAsync(id);
-            await gameRepo.DeleteGameRoom(gameModel);
+            var gameUserModel = await gameRepo.FindGameUserAsync(id);
+            await gameRepo.DeleteGameUserAsync(gameUserModel);
 
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
         public async Task<IActionResult> Clear()
         {
-            await gameRepo.ClearGameRoomAsync();
+            await gameRepo.ClearGameUserAsync();
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
     }
 }

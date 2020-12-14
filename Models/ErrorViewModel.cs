@@ -1,5 +1,3 @@
-using System;
-
 namespace AssetWebManager.Models
 {
     public class ErrorViewModel

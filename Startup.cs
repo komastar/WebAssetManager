@@ -1,20 +1,17 @@
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using AssetWebManager.Data;
+using AssetWebManager.Models;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.Net.WebSockets;
-using Microsoft.AspNetCore.Http;
 using System.Threading;
-using AssetWebManager.Models;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
-using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace AssetWebManager
 {

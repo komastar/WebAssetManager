@@ -1,12 +1,8 @@
 ﻿using AssetWebManager.Data;
 using AssetWebManager.Models;
-using Microsoft.AspNetCore.Hosting;
+using AssetWebManager.Repository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AssetWebManager.Controllers
@@ -15,15 +11,11 @@ namespace AssetWebManager.Controllers
     [ApiController]
     public class ApiGameController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        private readonly ILogger<ApiAssetBundleController> _logger;
-        private IWebHostEnvironment _env;
+        private readonly GameRepository gameRepo;
 
-        public ApiGameController(ApplicationDbContext context, ILogger<ApiAssetBundleController> logger, IWebHostEnvironment env)
+        public ApiGameController(ApplicationDbContext context)
         {
-            _context = context;
-            _logger = logger;
-            _env = env;
+            gameRepo = new GameRepository(context);
         }
 
         #region RESTAPI
@@ -31,67 +23,50 @@ namespace AssetWebManager.Controllers
         [HttpGet("{gamecode}")]
         public ResponseModel Get(string gamecode)
         {
-            return new ResponseModel(FindGame(gamecode));
+            return new ResponseModel(gameRepo.FindGameRoom(gamecode));
         }
 
         // GET: api/ApiGame/GetAll
         [HttpGet]
         public IEnumerable<GameRoomModel> GetAll()
         {
-            return _context.GameRoom.ToList();
+            return gameRepo.GetAllGameRoom();
         }
 
         //  GET: api/ApiGame/Create/4
         [HttpGet("{maxUserCount}")]
         public ResponseModel Create(int maxUserCount)
         {
-            var gameCode = MakeGameCode();
-            GameRoomModel newGame = new GameRoomModel(gameCode, maxUserCount);
+            var gameRoom = gameRepo.CreateGameRoom(maxUserCount);
 
-            AddOrUpdate(newGame);
-
-            return new ResponseModel(newGame);
+            return new ResponseModel(gameRoom);
         }
 
         //  GET: api/ApiGame/Join/c0de
         [HttpGet("{gamecode}")]
         public ResponseModel Join(string gamecode)
         {
-            var game = FindGame(gamecode);
-            if (null != game)
+            var gameRoom = gameRepo.JoinGameRoom(gamecode);
+            if (null != gameRoom)
             {
-                if (game.UserCount < game.MaxUserCount)
-                {
-                    game.UserCount++;
-                    AddOrUpdate(game);
-
-                    return new ResponseModel(true, game);
-                }
+                return new ResponseModel(true, gameRoom);
             }
 
             return new ResponseModel(false);
         }
 
         // GET: api/ApiGame/Exit/c0de
-        [HttpGet("{gamecode}")]
-        public ResponseModel Exit(string gamecode)
+        [HttpGet("{gamecode}/{userid}")]
+        public ResponseModel Exit(string gamecode, string userid)
         {
-            var game = FindGame(gamecode);
-            if (null == game)
+            var gameRoom = gameRepo.ExitGameRoom(gamecode, userid);
+            if (null == gameRoom)
             {
                 return new ResponseModel(false);
             }
-
-            game.UserCount--;
-            if (0 < game.UserCount)
-            {
-                AddOrUpdate(game);
-
-                return new ResponseModel(game);
-            }
             else
             {
-                return new ResponseModel(Remove(gamecode));
+                return new ResponseModel(gameRoom);
             }
         }
 
@@ -106,54 +81,5 @@ namespace AssetWebManager.Controllers
             return response;
         }
         #endregion
-
-        private string MakeGameCode()
-        {
-            GameRoomModel game;
-            string newGameCode;
-            do
-            {
-                var guid = Guid.NewGuid();
-                newGameCode = guid.ToString().Substring(0, 4).ToLower();
-                game = FindGame(newGameCode);
-            } while (null != game);
-
-            return newGameCode;
-        }
-
-        private GameRoomModel FindGame(string gamecode)
-        {
-            return _context.Find<GameRoomModel>(gamecode);
-        }
-
-        private void AddOrUpdate(GameRoomModel newGame)
-        {
-            var find = _context.Find<GameRoomModel>(newGame.GameCode);
-            if (null == find)
-            {
-                _context.Add(newGame);
-            }
-            else
-            {
-                _context.Update(newGame);
-            }
-            _context.SaveChanges();
-        }
-
-        private bool Remove(string gamecode)
-        {
-            var game = FindGame(gamecode);
-            if (null != game)
-            {
-                _context.Remove(game);
-                _context.SaveChanges();
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
     }
 }
