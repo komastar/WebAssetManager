@@ -3,6 +3,7 @@ using AssetWebManager.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AssetWebManager.Repository
@@ -45,7 +46,9 @@ namespace AssetWebManager.Repository
             newGame = await CreateGameRoomAsync(newGame);
 
             var gameOwner = CreateGameUser(newGame.Id);
-            JoinGameUser(gameOwner.UserId, newGame.GameCode);
+            JoinGameUser(gameOwner.UserId, newGame);
+            newGame.OwnerUserId = gameOwner.UserId;
+            newGame.UserId = gameOwner.UserId;
 
             return newGame;
         }
@@ -83,18 +86,16 @@ namespace AssetWebManager.Repository
                 {
                     gameRoom.UserCount++;
                     db.Update(gameRoom);
+
+                    var gameUser = CreateGameUser(gameRoom.Id);
+                    JoinGameUser(gameUser.UserId, gameRoom);
+                    gameRoom.UserId = gameUser.UserId;
+
+                    return gameRoom;
                 }
-
-                var gameUser = CreateGameUser(gameRoom.Id);
-                JoinGameUser(gameUser.UserId, gameRoom.GameCode);
-                gameRoom.UserId = gameUser.UserId;
-
-                return gameRoom;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         public async Task UpdateGameRoomAsync(GameRoomModel gameRoom)
@@ -118,8 +119,21 @@ namespace AssetWebManager.Repository
                 gameUser.GameRoomId = 0;
                 db.Update(gameUser);
             }
+            else
+            {
+                return null;
+            }
 
-            return gameRoom;
+            if (0 >= gameRoom.UserCount)
+            {
+                DeleteGameRoom(gameRoom);
+
+                return null;
+            }
+            else
+            {
+                return gameRoom;
+            }
         }
 
         public async Task UpdateGameUserAsync(GameUserModel gameUserModel)
@@ -128,10 +142,17 @@ namespace AssetWebManager.Repository
             await db.SaveChangesAsync();
         }
 
-        public async Task DeleteGameRoom(GameRoomModel gameRoom)
+        public async Task DeleteGameRoomAsync(GameRoomModel gameRoom)
         {
+            var users = db.GameUser.Where(u => u.GameRoomId == gameRoom.Id);
+            db.GameUser.RemoveRange(users);
             db.Remove(gameRoom);
             await db.SaveChangesAsync();
+        }
+
+        public void DeleteGameRoom(GameRoomModel gameRoom)
+        {
+            DeleteGameRoomAsync(gameRoom).GetAwaiter().GetResult();
         }
 
         public async Task<int> ClearGameRoomAsync()
@@ -223,10 +244,9 @@ namespace AssetWebManager.Repository
             return userId;
         }
 
-        private GameUserModel JoinGameUser(string userId, string gameCode)
+        private GameUserModel JoinGameUser(string userId, GameRoomModel gameRoom)
         {
             var gameUser = FindGameUser(userId);
-            var gameRoom = FindGameRoom(gameCode);
             gameUser.GameRoomId = gameRoom.Id;
             db.Update(gameUser);
             db.SaveChanges();

@@ -137,7 +137,7 @@ namespace AssetWebManager.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var gameModel = await gameRepo.FindGameRoomAsync(id);
-            await gameRepo.DeleteGameRoom(gameModel);
+            await gameRepo.DeleteGameRoomAsync(gameModel);
 
             return RedirectToAction(nameof(Index));
         }

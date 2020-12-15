@@ -70,6 +70,23 @@ namespace AssetWebManager.Controllers
             }
         }
 
+        //  GET: api/ApiGame/Delete/c0de
+        [HttpGet("{gamecode}")]
+        public bool Delete(string gamecode)
+        {
+            var gameRoom = gameRepo.FindGameRoom(gamecode);
+            if (null != gameRoom)
+            {
+                gameRepo.DeleteGameRoom(gameRoom);
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         //  GET: api/ApiGame/Round/c0de
         [HttpGet("{gamecode}/{time}")]
         public async Task<ResponseModel> Round(string gamecode, int time)
