@@ -10,16 +10,11 @@ namespace AssetWebManager.Repository
 {
     public class GameRepository
     {
-        private static ApplicationDbContext db;
-        private static GameRepository instance;
+        private ApplicationDbContext db;
 
         public GameRepository(ApplicationDbContext _context)
         {
-            if (null == instance)
-            {
-                instance = this;
-                db = _context;
-            }
+            db = _context;
         }
 
         #region GameRoom
@@ -54,12 +49,14 @@ namespace AssetWebManager.Repository
         public GameRoomModel StartGame(string gamecode)
         {
             var gameRoom = FindGameRoom(gamecode);
-            if (null != gameRoom
-                && 1 < gameRoom.UserCount)
+            if (null != gameRoom)
             {
-                gameRoom.IsOpen = false;
-                gameRoom.MaxUserCount = gameRoom.UserCount;
-                UpdateGameRoom(gameRoom);
+                if (1 < gameRoom.UserCount)
+                {
+                    gameRoom.IsOpen = false;
+                    gameRoom.MaxUserCount = gameRoom.UserCount;
+                    UpdateGameRoom(gameRoom);
+                }
 
                 return gameRoom;
             }
