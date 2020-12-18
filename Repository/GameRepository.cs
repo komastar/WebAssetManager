@@ -45,10 +45,8 @@ namespace AssetWebManager.Repository
 
             newGame = await CreateGameRoomAsync(newGame);
 
-            var gameOwner = CreateGameUser(newGame.Id);
-            JoinGameUser(gameOwner.UserId, newGame);
+            var gameOwner = JoinGameRoom(newGame.GameCode);
             newGame.OwnerUserId = gameOwner.UserId;
-            newGame.UserId = gameOwner.UserId;
 
             return newGame;
         }
