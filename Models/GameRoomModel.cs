@@ -20,7 +20,7 @@ namespace AssetWebManager.Models
 
         public GameRoomModel() { }
 
-        public GameRoomModel(string gamecode, int maxUserCount, bool isOpen = false)
+        public GameRoomModel(string gamecode, int maxUserCount, bool isOpen = true)
         {
             maxUserCount = maxUserCount > 6 ? 6 : maxUserCount;
             GameCode = gamecode;

@@ -53,6 +53,22 @@ namespace AssetWebManager.Repository
             return newGame;
         }
 
+        public GameRoomModel StartGame(string gamecode)
+        {
+            var gameRoom = FindGameRoom(gamecode);
+            if (null != gameRoom
+                && 1 < gameRoom.UserCount)
+            {
+                gameRoom.IsOpen = false;
+                gameRoom.MaxUserCount = gameRoom.UserCount;
+                UpdateGameRoom(gameRoom);
+
+                return gameRoom;
+            }
+
+            return null;
+        }
+
         public async Task<GameRoomModel> CreateGameRoomAsync(GameRoomModel gameRoom)
         {
             await db.AddAsync(gameRoom);
@@ -80,7 +96,8 @@ namespace AssetWebManager.Repository
         public GameRoomModel JoinGameRoom(string gameCode)
         {
             var gameRoom = FindGameRoom(gameCode);
-            if (null != gameRoom)
+            if (null != gameRoom
+                && true == gameRoom.IsOpen)
             {
                 if (gameRoom.UserCount < gameRoom.MaxUserCount)
                 {
@@ -96,6 +113,11 @@ namespace AssetWebManager.Repository
             }
 
             return null;
+        }
+
+        public void UpdateGameRoom(GameRoomModel gameRoom)
+        {
+            UpdateGameRoomAsync(gameRoom).GetAwaiter().GetResult();
         }
 
         public async Task UpdateGameRoomAsync(GameRoomModel gameRoom)

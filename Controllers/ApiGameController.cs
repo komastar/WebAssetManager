@@ -42,6 +42,19 @@ namespace AssetWebManager.Controllers
             return new ResponseModel(gameRoom);
         }
 
+        //  GET: api/ApiGame/Start/c0de
+        [HttpGet("{gamecode}")]
+        public ResponseModel Start(string gamecode)
+        {
+            var gameRoom = gameRepo.StartGame(gamecode);
+            if (null != gameRoom)
+            {
+                return new ResponseModel(gameRoom);
+            }
+
+            return new ResponseModel(false);
+        }
+
         //  GET: api/ApiGame/Join/c0de
         [HttpGet("{gamecode}")]
         public ResponseModel Join(string gamecode)
