@@ -100,15 +100,47 @@ namespace AssetWebManager.Controllers
             }
         }
 
+        static object _lock = new object();
+        static Dictionary<string, Stack<int>> game = new Dictionary<string, Stack<int>>();
+
         //  GET: api/ApiGame/Round/c0de
-        [HttpGet("{gamecode}/{time}")]
-        public async Task<ResponseModel> Round(string gamecode, int time)
+        [HttpGet("{gamecode}/{round}")]
+        public async Task<bool> Round(string gamecode, int round)
         {
-            ResponseModel response = new ResponseModel(true);
+            if (0 == round)
+            {
+                return false;
+            }
 
-            await Task.Delay(time);
+            await RoundAsync(gamecode, round);
 
-            return response;
+            return true;
+        }
+
+        private async Task RoundAsync(string gamecode, int round)
+        {
+            lock (_lock)
+            {
+                if (false == game.ContainsKey(gamecode))
+                {
+                    game.Add(gamecode, new Stack<int>());
+                }
+
+                if (round > game[gamecode].Count)
+                {
+                    game[gamecode].Push(0);
+                }
+
+                int userRound = game[gamecode].Pop();
+                userRound++;
+                game[gamecode].Push(userRound);
+            }
+
+            var gameRoom = gameRepo.FindGameRoom(gamecode);
+            while (gameRoom.MaxUserCount > game[gamecode].Peek())
+            {
+                await Task.Yield();
+            }
         }
         #endregion
     }
