@@ -19,9 +19,9 @@ namespace AssetWebManager.Controllers
         }
 
         #region RESTAPI
-        //  GET: api/ApiGame/Get
+        //  GET: api/ApiGame/Find
         [HttpGet("{gamecode}")]
-        public ResponseModel Get(string gamecode)
+        public ResponseModel Find(string gamecode)
         {
             return new ResponseModel(gameRepo.FindGameRoom(gamecode));
         }
