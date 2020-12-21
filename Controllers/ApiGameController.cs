@@ -2,7 +2,9 @@
 using AssetWebManager.Models;
 using AssetWebManager.Repository;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AssetWebManager.Controllers
@@ -12,56 +14,51 @@ namespace AssetWebManager.Controllers
     public class ApiGameController : ControllerBase
     {
         private readonly GameRepository gameRepo;
+        private ApplicationDbContext context;
 
         public ApiGameController(ApplicationDbContext context)
         {
             gameRepo = new GameRepository(context);
+            this.context = context;
         }
 
         #region RESTAPI
-        //  GET: api/ApiGame/Find
         [HttpGet("{gamecode}")]
         public GameRoomModel Find(string gamecode)
         {
             return gameRepo.FindGameRoom(gamecode);
         }
 
-        // GET: api/ApiGame/GetAll
         [HttpGet]
         public IEnumerable<GameRoomModel> GetAll()
         {
             return gameRepo.GetAllGameRoom();
         }
 
-        //  GET: api/ApiGame/Create/4
         [HttpGet("{maxUserCount}")]
         public GameRoomModel Create(int maxUserCount)
         {
             return gameRepo.CreateGameRoom(maxUserCount);
         }
 
-        //  GET: api/ApiGame/Start/c0de
         [HttpGet("{gamecode}")]
         public GameRoomModel Start(string gamecode)
         {
             return gameRepo.StartGame(gamecode);
         }
 
-        //  GET: api/ApiGame/Join/c0de
         [HttpGet("{gamecode}")]
         public GameRoomModel Join(string gamecode)
         {
             return gameRepo.JoinGameRoom(gamecode);
         }
 
-        // GET: api/ApiGame/Exit/c0de
         [HttpGet("{gamecode}/{userid}")]
         public GameRoomModel Exit(string gamecode, string userid)
         {
             return gameRepo.ExitGameRoom(gamecode, userid);
         }
 
-        //  GET: api/ApiGame/Delete/c0de
         [HttpGet("{gamecode}")]
         public bool Delete(string gamecode)
         {
@@ -78,47 +75,59 @@ namespace AssetWebManager.Controllers
             }
         }
 
-        static object _lock = new object();
-        static Dictionary<string, Stack<int>> game = new Dictionary<string, Stack<int>>();
-
-        //  GET: api/ApiGame/Round/c0de
-        [HttpGet("{gamecode}/{round}")]
-        public async Task<bool> Round(string gamecode, int round)
+        [HttpGet("{gamecode}/{userid}/{score}")]
+        public async Task<GameResultModel> End(string gamecode, string userid, int score)
         {
-            if (0 == round)
-            {
-                return false;
-            }
+            GameResultModel result = new GameResultModel();
+            //  find game
+            //  collect userid and score
+            //  
+            await Task.Yield();
 
-            await RoundAsync(gamecode, round);
-
-            return true;
+            return result;
         }
 
-        private async Task RoundAsync(string gamecode, int round)
+        static object _lock = new object();
+        static Dictionary<string, List<RoundModel>> rounds = new Dictionary<string, List<RoundModel>>();
+
+        [HttpGet("{gamecode}/{round}")]
+        public async Task<RoundModel> Round(string gamecode, int round)
         {
             lock (_lock)
             {
-                if (false == game.ContainsKey(gamecode))
+                if (false == rounds.ContainsKey(gamecode))
                 {
-                    game.Add(gamecode, new Stack<int>());
+                    rounds.Add(gamecode, new List<RoundModel>());
                 }
 
-                if (round > game[gamecode].Count)
+                if (round + 1 > rounds[gamecode].Count)
                 {
-                    game[gamecode].Push(0);
+                    rounds[gamecode].Add(new RoundModel(round));
                 }
 
-                int userRound = game[gamecode].Pop();
-                userRound++;
-                game[gamecode].Push(userRound);
+                RoundModel userRound = rounds[gamecode][round];
+                userRound.ReadyCount++;
             }
 
+            List<DiceModel> dice101 = context.Dice.Where(d => d.DiceId == 101).ToList();
+            List<DiceModel> dice201 = context.Dice.Where(d => d.DiceId == 201).ToList();
+            RoundModel roundData = rounds[gamecode][round];
+            Random r = new Random();
+            for (int i = 0; i < 4; i++)
+            {
+                int randomIndex = r.Next(0, dice101.Count);
+                roundData.Dices.Add(dice101[randomIndex].RouteId);
+            }
+
+            roundData.Dices.Add(dice201[r.Next(0, dice201.Count)].RouteId);
+
             var gameRoom = gameRepo.FindGameRoom(gamecode);
-            while (gameRoom.MaxUserCount > game[gamecode].Peek())
+            while (gameRoom.MaxUserCount > roundData.ReadyCount)
             {
                 await Task.Yield();
             }
+
+            return roundData;
         }
         #endregion
     }

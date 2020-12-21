@@ -14,5 +14,6 @@ namespace AssetWebManager.Data
         public DbSet<GameRoomModel> GameRoom { get; set; }
         public DbSet<ContentLockModel> ContentLock { get; set; }
         public DbSet<GameUserModel> GameUser { get; set; }
+        public DbSet<DiceModel> Dice { get; set; }
     }
 }
