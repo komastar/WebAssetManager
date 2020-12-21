@@ -19,18 +19,18 @@ namespace AssetWebManager.Controllers
         #region RESTAPI
         // GET: api/ApiContentLock/Check/{PROJECT}/{VERSION}/{CONTENT_NAME}
         [HttpGet("{project}/{version}/{content}")]
-        public ResponseModel Check(string project, string version, string content)
+        public bool Check(string project, string version, string content)
         {
-            ResponseModel response = new ResponseModel(false);
+            bool contentLockCheck = false;
             var contentLock = FindContentLock(project, content);
             if (null != contentLock)
             {
                 VersionModel versionFromData = new VersionModel(contentLock.Version);
                 VersionModel versionFromClient = new VersionModel(version);
-                response.ProcessResult = (versionFromClient >= versionFromData) && !contentLock.Lock;
+                contentLockCheck = (versionFromClient >= versionFromData) && !contentLock.Lock;
             }
 
-            return response;
+            return contentLockCheck;
         }
         #endregion
 

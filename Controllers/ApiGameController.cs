@@ -21,9 +21,9 @@ namespace AssetWebManager.Controllers
         #region RESTAPI
         //  GET: api/ApiGame/Find
         [HttpGet("{gamecode}")]
-        public ResponseModel Find(string gamecode)
+        public GameRoomModel Find(string gamecode)
         {
-            return new ResponseModel(gameRepo.FindGameRoom(gamecode));
+            return gameRepo.FindGameRoom(gamecode);
         }
 
         // GET: api/ApiGame/GetAll
@@ -35,52 +35,30 @@ namespace AssetWebManager.Controllers
 
         //  GET: api/ApiGame/Create/4
         [HttpGet("{maxUserCount}")]
-        public ResponseModel Create(int maxUserCount)
+        public GameRoomModel Create(int maxUserCount)
         {
-            var gameRoom = gameRepo.CreateGameRoom(maxUserCount);
-
-            return new ResponseModel(gameRoom);
+            return gameRepo.CreateGameRoom(maxUserCount);
         }
 
         //  GET: api/ApiGame/Start/c0de
         [HttpGet("{gamecode}")]
-        public ResponseModel Start(string gamecode)
+        public GameRoomModel Start(string gamecode)
         {
-            var gameRoom = gameRepo.StartGame(gamecode);
-            if (null != gameRoom)
-            {
-                return new ResponseModel(gameRoom);
-            }
-
-            return new ResponseModel(false);
+            return gameRepo.StartGame(gamecode);
         }
 
         //  GET: api/ApiGame/Join/c0de
         [HttpGet("{gamecode}")]
-        public ResponseModel Join(string gamecode)
+        public GameRoomModel Join(string gamecode)
         {
-            var gameRoom = gameRepo.JoinGameRoom(gamecode);
-            if (null != gameRoom)
-            {
-                return new ResponseModel(true, gameRoom);
-            }
-
-            return new ResponseModel(false);
+            return gameRepo.JoinGameRoom(gamecode);
         }
 
         // GET: api/ApiGame/Exit/c0de
         [HttpGet("{gamecode}/{userid}")]
-        public ResponseModel Exit(string gamecode, string userid)
+        public GameRoomModel Exit(string gamecode, string userid)
         {
-            var gameRoom = gameRepo.ExitGameRoom(gamecode, userid);
-            if (null == gameRoom)
-            {
-                return new ResponseModel(false);
-            }
-            else
-            {
-                return new ResponseModel(gameRoom);
-            }
+            return gameRepo.ExitGameRoom(gamecode, userid);
         }
 
         //  GET: api/ApiGame/Delete/c0de
