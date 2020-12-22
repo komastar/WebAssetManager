@@ -75,16 +75,28 @@ namespace AssetWebManager.Controllers
             }
         }
 
+        static object endLock = new object();
+        static Dictionary<string, List<GameResultModel>> gameResult = new Dictionary<string, List<GameResultModel>>();
         [HttpGet("{gamecode}/{userid}/{score}")]
-        public async Task<GameResultModel> End(string gamecode, string userid, int score)
+        public async Task<List<GameResultModel>> End(string gamecode, string userid, int score)
         {
-            GameResultModel result = new GameResultModel();
-            //  find game
-            //  collect userid and score
-            //  
-            await Task.Yield();
+            lock (endLock)
+            {
+                if (false == gameResult.ContainsKey(gamecode))
+                {
+                    gameResult.Add(gamecode, new List<GameResultModel>());
+                }
 
-            return result;
+                gameResult[gamecode].Add(new GameResultModel() { UserId = userid, Score = score });
+            }
+
+            var game = gameRepo.FindGameRoom(gamecode);
+            while (game.MaxUserCount != gameResult[gamecode].Count)
+            {
+                await Task.Yield();
+            }
+
+            return gameResult[gamecode];
         }
 
         static object _lock = new object();

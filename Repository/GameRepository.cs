@@ -42,6 +42,8 @@ namespace AssetWebManager.Repository
 
             var gameOwner = JoinGameRoom(newGame.GameCode);
             newGame.OwnerUserId = gameOwner.UserId;
+            db.Update(newGame);
+            await db.SaveChangesAsync();
 
             return newGame;
         }

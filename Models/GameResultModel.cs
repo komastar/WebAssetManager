@@ -7,5 +7,7 @@ namespace AssetWebManager.Models
 {
     public class GameResultModel
     {
+        public string UserId { get; set; }
+        public int Score { get; set; }
     }
 }
