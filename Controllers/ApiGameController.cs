@@ -134,7 +134,7 @@ namespace AssetWebManager.Controllers
             roundData.Dices.Add(dice201[r.Next(0, dice201.Count)].RouteId);
 
             var gameRoom = gameRepo.FindGameRoom(gamecode);
-            while (gameRoom.MaxUserCount > roundData.ReadyCount)
+            while (gameRoom.UserCount > roundData.ReadyCount)
             {
                 await Task.Yield();
             }
