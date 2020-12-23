@@ -129,30 +129,25 @@ namespace AssetWebManager.Repository
             if (null != gameRoom)
             {
                 gameRoom.UserCount--;
+
                 if (0 < gameRoom.UserCount)
                 {
-                    db.Update(gameRoom);
+                    var gameUser = FindGameUser(userId);
+                    DeleteGameUser(gameUser);
+
+                    var userInRoom = db.GameUser.Where(u => u.GameRoomId == gameRoom.Id).FirstOrDefault();
+                    gameRoom.OwnerUserId = userInRoom.UserId;
+                    UpdateGameRoom(gameRoom);
+
+                    return gameRoom;
                 }
-
-                var gameUser = FindGameUser(userId);
-                gameUser.GameRoomId = 0;
-                db.Update(gameUser);
-            }
-            else
-            {
-                return null;
+                else
+                {
+                    DeleteGameRoom(gameRoom);
+                }
             }
 
-            if (0 >= gameRoom.UserCount)
-            {
-                DeleteGameRoom(gameRoom);
-
-                return null;
-            }
-            else
-            {
-                return gameRoom;
-            }
+            return null;
         }
 
         public async Task UpdateGameUserAsync(GameUserModel gameUserModel)
@@ -195,6 +190,11 @@ namespace AssetWebManager.Repository
             var gameUsers = await db.GameUser.ToListAsync();
             db.RemoveRange(gameUsers);
             await db.SaveChangesAsync();
+        }
+
+        public void DeleteGameUser(GameUserModel gameUser)
+        {
+            DeleteGameUserAsync(gameUser).GetAwaiter().GetResult();
         }
 
         public async Task DeleteGameUserAsync(GameUserModel gameUserModel)
