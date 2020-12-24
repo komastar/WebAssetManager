@@ -138,8 +138,6 @@ namespace AssetWebManager.Repository
                     var userInRoom = db.GameUser.Where(u => u.GameRoomId == gameRoom.Id).FirstOrDefault();
                     gameRoom.OwnerUserId = userInRoom.UserId;
                     UpdateGameRoom(gameRoom);
-
-                    return gameRoom;
                 }
                 else
                 {
@@ -147,7 +145,7 @@ namespace AssetWebManager.Repository
                 }
             }
 
-            return null;
+            return gameRoom;
         }
 
         public async Task UpdateGameUserAsync(GameUserModel gameUserModel)
