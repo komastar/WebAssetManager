@@ -48,6 +48,32 @@ namespace AssetWebManager.Repository
             return newGame;
         }
 
+        public string CreateGameUser(string username)
+        {
+            GameUserModel newUser = new GameUserModel
+            {
+                Username = username
+            };
+
+            db.GameUser.Add(newUser);
+            db.SaveChanges();
+
+            return newUser.UserId;
+        }
+
+        public string FindGameUserByNameAsync(string username)
+        {
+            var user = db.GameUser.FirstOrDefault(u => u.Username == username);
+            if (null != user)
+            {
+                return user.UserId;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public GameRoomModel StartGame(string gamecode)
         {
             var gameRoom = FindGameRoom(gamecode);

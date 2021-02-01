@@ -10,5 +10,6 @@ namespace AssetWebManager.Models
         [Key]
         public string UserId { get; set; }
         public int GameRoomId { get; set; }
+        public string Username { get; set; }
     }
 }

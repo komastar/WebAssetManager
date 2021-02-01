@@ -41,6 +41,20 @@ namespace AssetWebManager.Controllers
             return gameRepo.CreateGameRoom(maxUserCount);
         }
 
+        [HttpGet("{username}")]
+        public string NewUser(string username)
+        {
+            string userId = gameRepo.FindGameUserByNameAsync(username);
+            if (null == userId)
+            {
+                return gameRepo.CreateGameUser(username);
+            }
+            else
+            {
+                return "";
+            }
+        }
+
         [HttpGet("{gamecode}")]
         public GameRoomModel Start(string gamecode)
         {
